@@ -1,2 +1,2 @@
 # mezidia-inspector
- GitHub workflow to manage issues and pull requests
+ GitHub App to manage your repository
