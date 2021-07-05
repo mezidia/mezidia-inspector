@@ -3,7 +3,6 @@
  * @param {import('probot').Probot} app
  */
 module.exports = (app) => {
-  // Your code here
   app.log.info("Yay, the app was loaded!");
 
   app.on("issues.opened", async (context) => {
@@ -13,9 +12,23 @@ module.exports = (app) => {
     return context.octokit.issues.createComment(issueComment);
   });
 
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+  app.on('installation.created', async (context) => {
+    const owner = context.payload.installation.account.login;
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
+    for (const repository of context.payload.repositories) {
+      const repo = repository.name;
+
+      await context.octokit.issues.create({
+        repo,
+        owner,
+        title: 'Thank you for installing!',
+        assignee: owner,
+        body: 'Greetings from **Mezidia Inspector!**\n' +
+          '- My code and instructions you can see [here](https://github.com/mezidia/mezidia-inspector).\n' +
+          `- My author is @${process.env.AUTHOR_USERNAME}.\n` +
+          '- To close this issue, just type in comments "close".',
+        labels: ['thank you'],
+      });
+    }
+  })
 };
