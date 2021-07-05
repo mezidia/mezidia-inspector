@@ -5,11 +5,19 @@
 module.exports = (app) => {
   app.log.info("Yay, the app was loaded!");
 
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue!",
-    });
-    return context.octokit.issues.createComment(issueComment);
+  app.on('issues.opened', async (context) => {
+    const owner = context.payload.repository.owner.login;
+    const issueOwner = context.payload.issue.user.login;
+    const newData = context.issue({
+      assignee: owner,
+      labels: ['work in progress'],
+    })
+    const comment = context.issue({
+      body: 'Hello there, ' + (issueOwner === owner ? 'sensei' : `@${issueOwner}. My owner will answer asap.`) +
+        '\nYou can close_ or _reopen_ this issue just typing these words: "close" or "reopen"',
+    })
+    await context.octokit.issues.update(newData)
+    return await context.octokit.issues.createComment(comment);
   });
 
   app.on('installation.created', async (context) => {
@@ -17,8 +25,7 @@ module.exports = (app) => {
 
     for (const repository of context.payload.repositories) {
       const repo = repository.name;
-
-      await context.octokit.issues.create({
+      const message = {
         repo,
         owner,
         title: 'Thank you for installing!',
@@ -28,7 +35,8 @@ module.exports = (app) => {
           `- My author is @${process.env.AUTHOR_USERNAME}.\n` +
           '- To close this issue, just type in comments "close".',
         labels: ['thank you'],
-      });
+      }
+      await context.octokit.issues.create(message);
     }
   })
 };
