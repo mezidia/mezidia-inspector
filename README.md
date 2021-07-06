@@ -1,6 +1,6 @@
 # mezidia-inspector
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A GitHub App built with Probot that A GitHub app to manage your repository
+> A GitHub App built with [Probot](https://github.com/probot/probot) to manage your repository
 
 ## Setup
 
