@@ -1,0 +1,12 @@
+**/venv/
+**/.git
+**/README.md
+**/LICENSE
+**/.vscode
+**/npm-debug.log
+**/coverage
+**/.env
+**/.editorconfig
+**/dist
+**/*.pem
+Dockerfile
