@@ -12,6 +12,7 @@ from gidgethub import sansio
 from gidgethub import apps
 
 from .config import GH_APP_ID, GH_PRIVATE_KEY
+from .utils import get_token
 
 router = routing.Router()
 cache = cachetools.LRUCache(maxsize=500)
@@ -49,13 +50,7 @@ async def webhook(request):
 
 @router.register("installation", action="created")
 async def repo_installation_added(event, gh, *args, **kwargs):
-    installation_id = event.data["installation"]["id"]
-    token = await apps.get_installation_access_token(
-        gh,
-        installation_id=installation_id,
-        app_id=GH_APP_ID,
-        private_key=GH_PRIVATE_KEY
-    )
+    token = await get_token(event, gh)
     repo_full_name = event.data['repositories'][0]['full_name']
     await gh.post(f'/repos/{repo_full_name}/issues',
                   data={
