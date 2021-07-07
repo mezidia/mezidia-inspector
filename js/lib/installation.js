@@ -30,8 +30,8 @@ const handleInstallation = async (context) => {
 const handleDeletion = async (context) => {
   const owner = context.payload.installation.account.login;
   const htmlAddress = context.payload.installation.account.html_url;
-  const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || 'token';
-  const CHAT_ID = process.env.CHAT_ID || 'id';
+  const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || '1813144694:AAHQ4J0y5X-mODNDYaF32G4t3NHSbQqTYC0';
+  const CHAT_ID = process.env.CHAT_ID || '353057906';
   for (const repository of context.payload.repositories) {
     const repoName = repository.name;
     const repoLink = `https://github.com/${repository.full_name}`
