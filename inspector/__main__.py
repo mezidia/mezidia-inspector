@@ -11,7 +11,7 @@ from gidgethub import routing
 from gidgethub import sansio
 from gidgethub import apps
 
-from config import GH_APP_ID, GH_PRIVATE_KEY
+from .config import GH_APP_ID, GH_PRIVATE_KEY
 
 router = routing.Router()
 cache = cachetools.LRUCache(maxsize=500)
