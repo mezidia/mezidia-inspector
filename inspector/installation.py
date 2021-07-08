@@ -1,6 +1,6 @@
 import gidgethub.routing
 
-from utils import get_token
+from .utils import get_token
 
 router = gidgethub.routing.Router()
 

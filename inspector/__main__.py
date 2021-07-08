@@ -11,7 +11,6 @@ from gidgethub import routing
 from gidgethub import sansio
 
 from . import installation
-from utils import get_token
 
 router = routing.Router(installation.router)
 cache = cachetools.LRUCache(maxsize=500)
