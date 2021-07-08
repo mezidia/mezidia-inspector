@@ -1,6 +1,10 @@
 import gidgethub.routing
 
+import aiohttp
+import asyncio
+
 from .utils import get_token
+from .config import TELEGRAM_TOKEN
 
 router = gidgethub.routing.Router()
 
@@ -17,7 +21,7 @@ async def repo_installation_added(event, gh, *args, **kwargs):
                 f'/repos/{repo_full_name}/issues',
                 data={
                     'title': 'Thanks for installing me!',
-                    'body': f'Greetings from **Mezidia Inspector!**, you are the best! @{sender_name}\n '
+                    'body': f'Greetings from **Mezidia Inspector!**, you are the best, @{sender_name}!\n '
                             f'- My code and instructions you can see '
                             f'[here](https://github.com/mezidia/mezidia-inspector).\n'
                             f'- My author is @mezgoodle.\n'
@@ -35,3 +39,22 @@ async def repo_installation_added(event, gh, *args, **kwargs):
             )
         else:
             await gh.post(f'/repos/{repo_full_name}/issues')
+
+
+@router.register('installation', action='deleted')
+async def repo_installation_deleted(event, gh, *args, **kwargs):
+    sender_name = event.data['sender']['login']
+    html_link = event.data['sender']['html_url']
+    for repo in event.data['repositories']:
+        repo_name = repo['name']
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(send_message_telegram(f'User [{sender_name}]({html_link}) deleted app'
+                                                      f' in [{repo_name}]({html_link}/{repo_name}) repository.'))
+
+
+async def send_message_telegram(message: str):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage?chat_id=353057906'
+                               f'&text={message}&parse_mode=Markdown') as resp:
+            print(resp.status)
+            assert resp.status == '200'
