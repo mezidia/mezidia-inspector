@@ -53,4 +53,4 @@ async def repo_installation_deleted(event, gh, *args, **kwargs):
 async def send_message_telegram(message: str):
     resp = requests.get(f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage?chat_id=353057906'
                         f'&text={message}&parse_mode=Markdown')
-    assert resp.status_code == '200'
+    print(resp.status_code)
