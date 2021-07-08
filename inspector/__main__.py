@@ -9,12 +9,11 @@ import cachetools
 from gidgethub import aiohttp as gh_aiohttp
 from gidgethub import routing
 from gidgethub import sansio
-from gidgethub import apps
 
-from .config import GH_APP_ID, GH_PRIVATE_KEY
-from .utils import get_token
+from . import installation
+from utils import get_token
 
-router = routing.Router()
+router = routing.Router(installation.router)
 cache = cachetools.LRUCache(maxsize=500)
 
 routes = web.RouteTableDef()
@@ -46,18 +45,6 @@ async def webhook(request):
     except Exception as exc:
         traceback.print_exc(file=sys.stderr)
         return web.Response(status=500)
-
-
-@router.register("installation", action="created")
-async def repo_installation_added(event, gh, *args, **kwargs):
-    token = await get_token(event, gh)
-    repo_full_name = event.data['repositories'][0]['full_name']
-    await gh.post(f'/repos/{repo_full_name}/issues',
-                  data={
-                      'title': 'Test title',
-                      'body': 'Best'
-                  },
-                  oauth_token=token["token"])
 
 
 if __name__ == "__main__":  # pragma: no cover
