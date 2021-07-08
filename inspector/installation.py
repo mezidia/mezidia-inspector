@@ -17,8 +17,13 @@ async def repo_installation_added(event, gh, *args, **kwargs):
                 f'/repos/{repo_full_name}/issues',
                 data={
                     'title': 'Thanks for installing me!',
-                    'body': f'You are the best! @{sender_name}\n Also my creator is @mezgoodle. \
-                    There you can find my body)'
+                    'body': f'Greetings from **Mezidia Inspector!**, you are the best! @{sender_name}\n '
+                            f'- My code and instructions you can see '
+                            f'[here](https://github.com/mezidia/mezidia-inspector).\n'
+                            f'- My author is @mezgoodle.\n'
+                            f'- This issue was closed immediately.',
+                    'labels': ['thank you'],
+                    'assignee': sender_name
                 },
                 oauth_token=token['token'],
             )
