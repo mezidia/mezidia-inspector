@@ -55,15 +55,14 @@ async def issue_created(event, gh, *args, **kwargs):
 
 @router.register('issues', action='closed')
 async def issue_closed(event, gh, *args, **kwargs):
-    """Opened issue"""
-    pass
-    # token = await get_token(event, gh)
-    # url = event.data['issue']['comments_url']
-    # author = event.data['issue']['user']['login']
-    # sender = event.data['sender']['login']
-    #
-    # msg = f'Thanks for issue, @{author}! @{sender}, thank \
-    # you for closing this issue, I have less work. \
-    # I will look forward to our next meeting😜'
-    #
-    # await leave_comment(gh, url, msg, token['token'])
+    token = await get_token(event, gh)
+    comment_url = event.data['issue']['comments_url']
+    author = event.data['issue']['user']['login']
+    sender = event.data['sender']['login']
+
+    comment = f'Thanks for issue, @{author}! @{sender}, thank \
+    you for closing this issue, I have less work. \
+    I will look forward to our next meeting😜\n'
+    comment += f'> If you want to reopen the issue - type "reopen"'
+
+    await leave_comment(gh, comment_url, comment, token['token'])
