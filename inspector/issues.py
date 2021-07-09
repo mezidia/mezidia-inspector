@@ -30,12 +30,14 @@ fields = [
 @router.register('issue_comment', action='created')
 async def issue_comment_created(event, gh, *args, **kwargs):
     """Created issue comment"""
-    username = event.data['sender']['login']
-    token = await get_token(event, gh)
-    issue_url = event.data['issue']['url']
-    comment_text = event.data['comment']['body']
-    await leave_comment(gh, issue_url, f'@{username}, I updated the issue', token['token'])
-    await update_issue(gh, issue_url, states[comment_text.lower().strip()], token['token'])
+    comment_text = event.data['comment']['body'].lower().strip()
+    if comment_text in states:
+        username = event.data['sender']['login']
+        token = await get_token(event, gh)
+        issue_url = event.data['issue']['url']
+        issue_comment_url = event.data['issue']['comments_url']
+        await leave_comment(gh, issue_comment_url, f'@{username}, I updated the issue', token['token'])
+        await update_issue(gh, issue_url, states[comment_text], token['token'])
 
 
 @router.register('issues', action='opened')
