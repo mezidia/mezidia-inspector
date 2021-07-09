@@ -2,9 +2,14 @@
 
 import gidgethub.routing
 
-from .utils import get_token, leave_comment
+from .utils import get_token, leave_comment, update_issue
 
 router = gidgethub.routing.Router()
+
+states = {
+    'close': 'closed',
+    'reopen': 'reopen',
+}
 
 
 @router.register('issue_comment', action='created')
@@ -12,18 +17,10 @@ async def issue_comment_created(event, gh, *args, **kwargs):
     """Created issue comment"""
     username = event.data['sender']['login']
     token = await get_token(event, gh)
-    comments_url = event.data['comment']['url']
+    issue_url = event.data['issue']['url']
     comment_text = event.data['comment']['body']
-    if username == ADMIN_NICKNAME:
-        if token:
-            await gh.post(
-                f'{comments_url}/reactions',
-                data={'content': 'heart'},
-                oauth_token=token['token'],
-                accept='application/vnd.github.squirrel-girl-preview+json'
-            )
-        else:
-            await gh.post(f'{comments_url}/reactions')
+    await update_issue(gh, issue_url, states[comment_text.lower().strip()], token['token'])
+    await leave_comment(gh, issue_url, f'@{username}, I updated the issue', token['token'])
 
 
 @router.register('issues', action='opened')

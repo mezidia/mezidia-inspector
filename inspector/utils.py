@@ -27,3 +27,12 @@ async def leave_comment(gh, issue_comment_url, message, token):
         oauth_token=token
     )
 
+
+async def update_issue(gh, issue_url, state, token):
+    data = {'state': state}
+    await gh.post(
+        f'{issue_url}',
+        data=data,
+        oauth_token=token
+    )
+
