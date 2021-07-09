@@ -8,7 +8,7 @@ router = gidgethub.routing.Router()
 @router.register('pull_request', action='opened')
 async def pr_opened(event, gh, *args, **kwargs):
     """Opened pull request"""
-    issue_comment_url = event.data['pull_request']['issue_url']
+    issue_comment_url = f"{event.data['pull_request']['issue_url']}/comments"
     sender = event.data['sender']['login']
     file_url = event.data['repository']['html_url'] + '/CONTRIBUTING.md'
     author_association = event.data['pull_request']['author_association']
