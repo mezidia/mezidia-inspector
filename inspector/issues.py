@@ -11,6 +11,21 @@ states = {
     'reopen': 'open',
 }
 
+fields = [
+    {
+        'field_name': 'labels',
+        'field_text': 'Need at least one label',
+    },
+    {
+        'field_name': 'assignees',
+        'field_text': 'Need at least one assignee',
+    },
+    {
+        'field_name': 'milestone',
+        'field_text': 'Need a milestone',
+    }
+]
+
 
 @router.register('issue_comment', action='created')
 async def issue_comment_created(event, gh, *args, **kwargs):
@@ -27,18 +42,14 @@ async def issue_comment_created(event, gh, *args, **kwargs):
 @router.register('issues', action='opened')
 async def issue_created(event, gh, *args, **kwargs):
     """Opened issue"""
-    pass
-    # token = await get_token(event, gh)
-    # url = event.data['issue']['comments_url']
-    # sender = event.data['sender']['login']
-    #
-    # if sender == ADMIN_NICKNAME:
-    #     msg = 'Nice to meet you here, sensei!'
-    # else:
-    #     msg = f'Nice to meet you, @{sender}\nI wish you have a nice \
-    #     day😊\n@mezgoodle will answer as soon as he can.'
-    #
-    # await leave_comment(gh, url, msg, token['token'])
+    token = await get_token(event, gh)
+    url = event.data['issue']['comments_url']
+    sender = event.data['sender']['login']
+    comment = f'Nice to meet you, @{sender}. Thank you for creating an issue. There are some tasks for you:\n'
+    for field in fields:
+        comment += f"- {'[x]' if field['field_name'] else '[ ]'} {field['field_text']}\n"
+    comment += 'To close issue send comment "close", to reopen - "reopen"'
+    await leave_comment(gh, url, comment, token['token'])
 
 
 @router.register('issues', action='closed')
