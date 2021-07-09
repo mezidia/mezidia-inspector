@@ -61,3 +61,13 @@ async def issue_closed(event, gh, *args, **kwargs):
     comment += f'> If you want to reopen the issue - type "reopen"'
 
     await leave_comment(gh, comment_url, comment, token['token'])
+
+
+@router.register('issues', action='labeled')
+@router.register('issues', action='assigned')
+@router.register('issues', action='milestoned')
+async def issue_task_update(event, gh, *args, **kwargs):
+    token = await get_token(event, gh)
+    comment_url = event.data['issue']['comments_url']
+    comment = 'Nice, one of tasks is done'
+    await leave_comment(gh, comment_url, comment, token['token'])
