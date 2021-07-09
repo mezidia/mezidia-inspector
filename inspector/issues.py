@@ -2,24 +2,9 @@
 
 import gidgethub.routing
 
-from .utils import get_token, leave_comment, update_issue, states
+from .utils import get_token, leave_comment, update_issue, states, fields
 
 router = gidgethub.routing.Router()
-
-fields = [
-    {
-        'field_name': 'labels',
-        'field_text': 'Need at least one label',
-    },
-    {
-        'field_name': 'assignees',
-        'field_text': 'Need at least one assignee',
-    },
-    {
-        'field_name': 'milestone',
-        'field_text': 'Need a milestone',
-    }
-]
 
 
 @router.register('issue_comment', action='created')

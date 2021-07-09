@@ -8,6 +8,21 @@ states = {
     'merge': '',
 }
 
+fields = [
+    {
+        'field_name': 'labels',
+        'field_text': 'Need at least one label',
+    },
+    {
+        'field_name': 'assignees',
+        'field_text': 'Need at least one assignee',
+    },
+    {
+        'field_name': 'milestone',
+        'field_text': 'Need a milestone',
+    }
+]
+
 
 async def get_token(event, gh):
     if 'installation' in event.data:

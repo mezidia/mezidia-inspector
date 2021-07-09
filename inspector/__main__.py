@@ -12,8 +12,9 @@ from gidgethub import sansio
 
 from . import installation
 from . import issues
+from . import prs
 
-router = routing.Router(installation.router, issues.router)
+router = routing.Router(installation.router, issues.router, prs.router)
 cache = cachetools.LRUCache(maxsize=500)
 
 routes = web.RouteTableDef()
