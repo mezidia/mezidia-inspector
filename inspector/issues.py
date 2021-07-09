@@ -30,13 +30,12 @@ fields = [
 @router.register('issue_comment', action='created')
 async def issue_comment_created(event, gh, *args, **kwargs):
     """Created issue comment"""
-    print('hello')
     username = event.data['sender']['login']
     token = await get_token(event, gh)
     issue_url = event.data['issue']['url']
     comment_text = event.data['comment']['body']
-    await update_issue(gh, issue_url, states[comment_text.lower().strip()], token['token'])
     await leave_comment(gh, issue_url, f'@{username}, I updated the issue', token['token'])
+    await update_issue(gh, issue_url, states[comment_text.lower().strip()], token['token'])
 
 
 @router.register('issues', action='opened')
@@ -47,8 +46,8 @@ async def issue_created(event, gh, *args, **kwargs):
     sender = event.data['sender']['login']
     comment = f'Nice to meet you, @{sender}. Thank you for creating an issue. There are some tasks for you:\n'
     for field in fields:
-        comment += f"- {'[x]' if field['field_name'] else '[ ]'} {field['field_text']}\n"
-    comment += 'To close issue send comment "close", to reopen - "reopen"'
+        comment += f"- {'[x]' if event.data['issue'][field['field_name']] else '[ ]'} {field['field_text']}\n"
+    comment += '\nTo close issue send comment "close", to reopen - "reopen"'
     await leave_comment(gh, url, comment, token['token'])
 
 
