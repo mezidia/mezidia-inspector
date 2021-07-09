@@ -8,7 +8,7 @@ router = gidgethub.routing.Router()
 
 states = {
     'close': 'closed',
-    'reopen': 'reopen',
+    'reopen': 'open',
 }
 
 
