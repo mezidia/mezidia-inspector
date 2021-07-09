@@ -16,3 +16,14 @@ async def get_token(event, gh):
     else:
         # For testing
         return None
+
+
+async def leave_comment(gh, issue_comment_url, message, token):
+    """Leave comment in issue or pull request"""
+    data = {'body': message}
+    await gh.post(
+        f'{issue_comment_url}',
+        data=data,
+        oauth_token=token
+    )
+

@@ -11,8 +11,9 @@ from gidgethub import routing
 from gidgethub import sansio
 
 from . import installation
+from . import issues
 
-router = routing.Router(installation.router)
+router = routing.Router(installation.router, issues.router)
 cache = cachetools.LRUCache(maxsize=500)
 
 routes = web.RouteTableDef()
