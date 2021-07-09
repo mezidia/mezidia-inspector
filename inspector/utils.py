@@ -2,6 +2,12 @@ from gidgethub import apps
 
 from .config import GH_APP_ID, GH_PRIVATE_KEY
 
+states = {
+    'close': 'closed',
+    'reopen': 'open',
+    'merge': '',
+}
+
 
 async def get_token(event, gh):
     if 'installation' in event.data:
@@ -28,8 +34,8 @@ async def leave_comment(gh, issue_comment_url, message, token):
     )
 
 
-async def update_issue(gh, issue_url, state, token):
-    data = {'state': state}
+async def update_issue(gh, issue_url, comment_text, token):
+    data = {'state': states[comment_text]}
     await gh.post(
         f'{issue_url}',
         data=data,

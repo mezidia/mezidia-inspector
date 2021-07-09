@@ -2,14 +2,9 @@
 
 import gidgethub.routing
 
-from .utils import get_token, leave_comment, update_issue
+from .utils import get_token, leave_comment, update_issue, states
 
 router = gidgethub.routing.Router()
-
-states = {
-    'close': 'closed',
-    'reopen': 'open',
-}
 
 fields = [
     {
@@ -36,7 +31,7 @@ async def issue_comment_created(event, gh, *args, **kwargs):
         token = await get_token(event, gh)
         issue_url = event.data['issue']['url']
         issue_comment_url = event.data['issue']['comments_url']
-        await update_issue(gh, issue_url, states[comment_text], token['token'])
+        await update_issue(gh, issue_url, comment_text, token['token'])
         await leave_comment(gh, issue_comment_url, f'@{username}, I updated the issue', token['token'])
 
 
