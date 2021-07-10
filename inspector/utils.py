@@ -60,7 +60,7 @@ async def get_url_for_deleted_branch(info):
     return url
 
 
-async def update_issue(gh, issue_url, comment_text, token, pull_number = 0):
+async def update_issue(gh, issue_url, comment_text, token, pull_number=0):
     if comment_text != 'merge':
         data = {'state': states[comment_text]}
         await gh.post(
@@ -72,10 +72,11 @@ async def update_issue(gh, issue_url, comment_text, token, pull_number = 0):
         data = {
             'pull_number': pull_number,
             'commit_title': states[comment_text]['commit_title'],
-            'commit_message':  states[comment_text]['commit_message'],
+            'commit_message': states[comment_text]['commit_message'],
         }
+        print(pull_number, issue_url)
         await gh.put(
-            issue_url,
+            f'{issue_url}',
             data=data,
             oauth_token=token
         )
@@ -86,7 +87,8 @@ async def help_issue_update(event, object_type: str):
         'labeled': 'labels',
         'assigned': 'assignees',
     }
+    if actions[event.data['action']] == 'converted_to_draft' or actions[event.data['action']] == 'milestoned':
+        return True
     if len(event.data[object_type][actions[event.data['action']]]) > 1:
         return False
     return True
-
