@@ -76,7 +76,7 @@ async def update_issue(gh, issue_url, comment_text, token, pull_number=0):
         }
         print(pull_number, issue_url)
         await gh.put(
-            f'{issue_url}',
+            f'{issue_url}/merge',
             data=data,
             oauth_token=token
         )
