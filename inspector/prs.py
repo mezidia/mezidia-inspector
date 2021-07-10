@@ -21,15 +21,16 @@ async def pr_opened(event, gh, *args, **kwargs):
         comment += f"- {'[x]' if event.data['pull_request'][field['field_name']] else '[ ]'} {field['field_text']}\n"
     comment += f"- {'[x]' if event.data['pull_request']['draft'] == 'true' else '[ ]'} " \
                f"{'Make a pull request draft at first'}\n"
+    comment += '\nTo close issue send comment "close", to reopen - "reopen", to merge - "merge"'
     if token is not None:
-        await leave_comment(gh, comment_url, comment, token['token'])
+        return await leave_comment(gh, comment_url, comment, token['token'])
     else:
-        await gh.post(comment_url)
+        return await gh.post(comment_url)
 
 
 @router.register('pull_request', action='closed')
 @router.register('pull_request', action='merged')
-async def events_pr(event, gh, *args, **kwargs):
+async def pr_closed_merged(event, gh, *args, **kwargs):
     """Closed or merged pull request"""
     token = await get_token(event, gh)
     created_by = event.data['pull_request']['user']['login']
@@ -50,7 +51,7 @@ async def events_pr(event, gh, *args, **kwargs):
     else:
         comment = f'Okay, @{created_by}, see you next time\n'
         comment += '> To reopen pull request type the comment "reopen"'
-    await leave_comment(gh, comment_url, comment, token['token'])
+    return await leave_comment(gh, comment_url, comment, token['token'])
 
 
 @router.register('pull_request', action='labeled')
@@ -62,4 +63,4 @@ async def pr_task_update(event, gh, *args, **kwargs):
         token = await get_token(event, gh)
         comment_url = event.data['pull_request']['comments_url']
         comment = 'Nice, one of tasks is done'
-        await leave_comment(gh, comment_url, comment, token['token'])
+        return await leave_comment(gh, comment_url, comment, token['token'])

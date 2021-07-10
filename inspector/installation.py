@@ -1,16 +1,13 @@
 import gidgethub.routing
 
-import requests
-
-from .utils import get_token
-from .config import TELEGRAM_TOKEN
+from .utils import get_token, send_message_telegram
 
 router = gidgethub.routing.Router()
 
 
 @router.register('installation', action='created')
 async def repo_installation_added(event, gh, *args, **kwargs):
-    """Installed bot to repository"""
+    """Installed bot to repositories"""
     token = await get_token(event, gh)
     sender_name = event.data['sender']['login']
     for repo in event.data['repositories']:
@@ -42,15 +39,10 @@ async def repo_installation_added(event, gh, *args, **kwargs):
 
 @router.register('installation', action='deleted')
 async def repo_installation_deleted(event, gh, *args, **kwargs):
+    """Deleted bot from repositories"""
     sender_name = event.data['sender']['login']
     html_link = event.data['sender']['html_url']
     for repo in event.data['repositories']:
         repo_name = repo['name']
         await send_message_telegram(f'User [{sender_name}]({html_link}) deleted app'
                                     f' in [{repo_name}]({html_link}/{repo_name}) repository.')
-
-
-async def send_message_telegram(message: str):
-    resp = requests.get(f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage?chat_id=353057906'
-                        f'&text={message}&parse_mode=Markdown')
-    print(resp.status_code)
