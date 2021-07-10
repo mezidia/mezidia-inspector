@@ -57,3 +57,13 @@ async def update_issue(gh, issue_url, comment_text, token):
         oauth_token=token
     )
 
+
+async def help_issue_update(event, object_type: str):
+    actions = {
+        'labeled': 'labels',
+        'assigned': 'assignees',
+    }
+    if len(event.data[object_type][actions[event.data['action']]]) > 1:
+        return False
+    return True
+

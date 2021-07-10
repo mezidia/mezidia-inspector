@@ -2,7 +2,7 @@
 
 import gidgethub.routing
 
-from .utils import get_token, leave_comment, update_issue, states, fields
+from .utils import get_token, leave_comment, update_issue, states, fields, help_issue_update
 
 router = gidgethub.routing.Router()
 
@@ -39,12 +39,10 @@ async def issue_closed(event, gh, *args, **kwargs):
     comment_url = event.data['issue']['comments_url']
     author = event.data['issue']['user']['login']
     sender = event.data['sender']['login']
-
     comment = f'Thanks for issue, @{author}! @{sender}, thank \
     you for closing this issue, I have less work. \
     I will look forward to our next meeting😜\n'
     comment += f'> If you want to reopen the issue - type "reopen"'
-
     await leave_comment(gh, comment_url, comment, token['token'])
 
 
@@ -52,7 +50,9 @@ async def issue_closed(event, gh, *args, **kwargs):
 @router.register('issues', action='assigned')
 @router.register('issues', action='milestoned')
 async def issue_task_update(event, gh, *args, **kwargs):
-    token = await get_token(event, gh)
-    comment_url = event.data['issue']['comments_url']
-    comment = 'Nice, one of tasks is done'
-    await leave_comment(gh, comment_url, comment, token['token'])
+    if await help_issue_update(event, 'issue'):
+        token = await get_token(event, gh)
+        comment_url = event.data['issue']['comments_url']
+        comment = 'Nice, one of tasks is done'
+        await leave_comment(gh, comment_url, comment, token['token'])
+
