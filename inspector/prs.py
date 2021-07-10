@@ -1,6 +1,6 @@
 import gidgethub.routing
 
-from .utils import get_token, leave_comment, fields
+from .utils import get_token, leave_comment, fields, help_issue_update, get_url_for_deleted_branch
 
 router = gidgethub.routing.Router()
 
@@ -31,40 +31,26 @@ async def pr_opened(event, gh, *args, **kwargs):
 @router.register('pull_request', action='merged')
 async def events_pr(event, gh, *args, **kwargs):
     """Closed or merged pull request"""
-    pass
-    # token = await get_token(event, gh)
-    # created_by = event.data['pull_request']['user']['login']
-    # issue_comment_url = event.data['pull_request']['issue_url'] + '/comments'
-    # info = event.data['pull_request']['head']
-    #
-    # if event.data['pull_request']['merged'] and event.data['pull_request']['state'] == 'closed':
-    #     merged_by = event.data['pull_request']['merged_by']['login']
-    #     if created_by == merged_by or merged_by == BOT_NAME:
-    #         thanks_to = f'Thanks @{created_by} for the PR 🌮🎉.'
-    #     else:
-    #         thanks_to = f'Thanks @{created_by} for the PR, and @{merged_by} for merging it 🌮🎉.'
-    #     message = f'{thanks_to}\n🐍🍒⛏🤖 I am not robot! I am not robot!'
-    #
-    #     owner = info['user']['login']
-    #     ref = info['ref']
-    #     repo = info['repo']['name']
-    #     url = f'/repos/{owner}/{repo}/git/refs/heads/{ref}'
-    #     if token is not None:
-    #         await leave_comment(gh, issue_comment_url, message, token['token'])
-    #         await gh.delete(url, oauth_token=token['token'],)
-    #     else:  # For tests
-    #         await gh.delete(url)
-    # else:
-    #     message = f'Okey, @{created_by}, see you next time'
-    #     owner = info['user']['login']
-    #     ref = info['ref']
-    #     repo = info['repo']['name']
-    #     url = f'/repos/{owner}/{repo}/git/refs/heads/{ref}'
-    #     if token is not None:
-    #         await leave_comment(gh, issue_comment_url, message, token['token'])
-    #         await gh.delete(url, oauth_token=token['token'],)
-    #     else:  # For tests
-    #         await gh.delete(url)
+    token = await get_token(event, gh)
+    created_by = event.data['pull_request']['user']['login']
+    comment_url = event.data['pull_request']['comments_url']
+    info = event.data['pull_request']['head']
+    comment = ''
+    if event.data['pull_request']['merged'] and event.data['pull_request']['state'] == 'closed':
+        merged_by = event.data['pull_request']['merged_by']['login']
+        if created_by == merged_by or merged_by == 'mezidia-inspector':
+            comment = f'Thanks @{created_by} for the PR 🌮🎉.'
+        else:
+            comment = f'Thanks @{created_by} for the PR, and @{merged_by} for merging it 🌮🎉.'
+        branch_url = await get_url_for_deleted_branch(info)
+        if token is not None:
+            await gh.delete(branch_url, oauth_token=token['token'],)
+        else:  # For tests
+            await gh.delete(branch_url)
+    else:
+        comment = f'Okay, @{created_by}, see you next time\n'
+        comment += '> To reopen pull request type the comment "reopen"'
+    await leave_comment(gh, comment_url, comment, token['token'])
 
 
 @router.register('pull_request', action='labeled')
@@ -72,8 +58,8 @@ async def events_pr(event, gh, *args, **kwargs):
 @router.register('pull_request', action='assigned')
 @router.register('pull_request', action='milestoned')
 async def pr_task_update(event, gh, *args, **kwargs):
-    """Labeled pull request"""
-    token = await get_token(event, gh)
-    comment_url = event.data['pull_request']['comments_url']
-    comment = 'Nice, one of tasks is done'
-    await leave_comment(gh, comment_url, comment, token['token'])
+    if await help_issue_update(event, 'issue'):
+        token = await get_token(event, gh)
+        comment_url = event.data['pull_request']['comments_url']
+        comment = 'Nice, one of tasks is done'
+        await leave_comment(gh, comment_url, comment, token['token'])

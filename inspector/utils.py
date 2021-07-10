@@ -5,7 +5,10 @@ from .config import GH_APP_ID, GH_PRIVATE_KEY
 states = {
     'close': 'closed',
     'reopen': 'open',
-    'merge': '',
+    'merge': {
+        'commit_title': 'Merge pull request',
+        'commit_message': 'Merged by Mezidia Inspector'
+    },
 }
 
 fields = [
@@ -49,13 +52,33 @@ async def leave_comment(gh, issue_comment_url, message, token):
     )
 
 
-async def update_issue(gh, issue_url, comment_text, token):
-    data = {'state': states[comment_text]}
-    await gh.post(
-        f'{issue_url}',
-        data=data,
-        oauth_token=token
-    )
+async def get_url_for_deleted_branch(info):
+    owner = info['user']['login']
+    ref = info['ref']
+    repo = info['repo']['name']
+    url = f'/repos/{owner}/{repo}/git/refs/heads/{ref}'
+    return url
+
+
+async def update_issue(gh, issue_url, comment_text, token, pull_number = 0):
+    if comment_text != 'merge':
+        data = {'state': states[comment_text]}
+        await gh.post(
+            f'{issue_url}',
+            data=data,
+            oauth_token=token
+        )
+    else:
+        data = {
+            'pull_number': pull_number,
+            'commit_title': states[comment_text]['commit_title'],
+            'commit_message':  states[comment_text]['commit_message'],
+        }
+        await gh.put(
+            issue_url,
+            data=data,
+            oauth_token=token
+        )
 
 
 async def help_issue_update(event, object_type: str):
