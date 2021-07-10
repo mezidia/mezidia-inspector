@@ -16,7 +16,7 @@ async def issue_comment_created(event, gh, *args, **kwargs):
         token = await get_token(event, gh)
         if comment_text == 'merge':
             issue_url = event.data['repository']['pulls_url']
-            pull_number = event.data['pull_request']['number']
+            pull_number = event.data['issue']['html_url'].split('/')[-1]
             await update_issue(gh, issue_url, comment_text, token['token'], pull_number)
         else:
             issue_url = event.data['issue']['url']

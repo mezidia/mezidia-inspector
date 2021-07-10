@@ -58,7 +58,7 @@ async def events_pr(event, gh, *args, **kwargs):
 @router.register('pull_request', action='assigned')
 @router.register('pull_request', action='milestoned')
 async def pr_task_update(event, gh, *args, **kwargs):
-    if await help_issue_update(event, 'issue'):
+    if await help_issue_update(event, 'pull_request'):
         token = await get_token(event, gh)
         comment_url = event.data['pull_request']['comments_url']
         comment = 'Nice, one of tasks is done'
