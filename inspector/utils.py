@@ -60,7 +60,7 @@ async def get_url_for_deleted_branch(info):
     return url
 
 
-async def update_issue(gh, issue_url, comment_text, token, pull_number=0):
+async def update_issue(gh, issue_url, comment_text, token):
     if comment_text != 'merge':
         data = {'state': states[comment_text]}
         await gh.post(
@@ -70,13 +70,11 @@ async def update_issue(gh, issue_url, comment_text, token, pull_number=0):
         )
     else:
         data = {
-            'pull_number': pull_number,
             'commit_title': states[comment_text]['commit_title'],
             'commit_message': states[comment_text]['commit_message'],
         }
-        print(pull_number, issue_url)
         await gh.put(
-            f'{issue_url}/merge',
+            f'{issue_url}',
             data=data,
             oauth_token=token
         )
