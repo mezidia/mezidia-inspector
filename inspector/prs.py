@@ -8,7 +8,7 @@ router = gidgethub.routing.Router()
 @router.register('pull_request', action='opened')
 async def pr_opened(event, gh, *args, **kwargs):
     """Opened pull request"""
-    issue_comment_url = f"{event.data['pull_request']['issue_url']}/comments"
+    comment_url = event.data['pull_request']['comments_url']
     sender = event.data['sender']['login']
     file_url = event.data['repository']['html_url'] + '/CONTRIBUTING.md'
     author_association = event.data['pull_request']['author_association']
@@ -22,9 +22,9 @@ async def pr_opened(event, gh, *args, **kwargs):
     comment += f"- {'[x]' if event.data['pull_request']['draft'] == 'true' else '[ ]'} " \
                f"{'Make a pull request draft at first'}\n"
     if token is not None:
-        await leave_comment(gh, issue_comment_url, comment, token['token'])
+        await leave_comment(gh, comment_url, comment, token['token'])
     else:
-        await gh.post(f'{issue_comment_url}/comments')
+        await gh.post(comment_url)
 
 
 @router.register('pull_request', action='closed')
@@ -68,12 +68,12 @@ async def events_pr(event, gh, *args, **kwargs):
 
 
 @router.register('pull_request', action='labeled')
-async def labeled_pr(event, gh, *args, **kwargs):
+@router.register('pull_request', action='converted_to_draft')
+@router.register('pull_request', action='assigned')
+@router.register('pull_request', action='milestoned')
+async def pr_task_update(event, gh, *args, **kwargs):
     """Labeled pull request"""
-    pass
-    # token = await get_token(event, gh)
-    # user = event.data['pull_request']['user']['login']
-    # sender = event.data['sender']['login']
-    # issue_comment_url = event.data['pull_request']['issue_url'] + '/comments'
-    # message = f'Wow! New label! @{sender}, thank you a lot! @{user}, did you see it?!'
-    # await leave_comment(gh, issue_comment_url, message, token['token'])
+    token = await get_token(event, gh)
+    comment_url = event.data['pull_request']['comments_url']
+    comment = 'Nice, one of tasks is done'
+    await leave_comment(gh, comment_url, comment, token['token'])
