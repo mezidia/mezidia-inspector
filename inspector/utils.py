@@ -73,6 +73,7 @@ async def update_issue(gh, issue_url, comment_text, token):
             'commit_title': states[comment_text]['commit_title'],
             'commit_message': states[comment_text]['commit_message'],
         }
+        print(issue_url)
         await gh.put(
             f'{issue_url}',
             data=data,
