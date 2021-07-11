@@ -42,7 +42,7 @@ async def webhook(request):
         except AttributeError:
             pass
         return web.Response(status=200)
-    except Exception as exc:
+    except Exception:
         traceback.print_exc(file=sys.stderr)
         return web.Response(status=500)
 

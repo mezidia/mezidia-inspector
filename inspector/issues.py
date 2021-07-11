@@ -53,7 +53,7 @@ async def issue_closed(event, gh, *args, **kwargs):
     comment = f'Thanks for issue, @{author}! @{sender}, thank \
     you for closing this issue, I have less work. \
     I will look forward to our next meeting😜\n'
-    comment += f'> If you want to reopen the issue - type "reopen"'
+    comment += '> If you want to reopen the issue - type "reopen"'
     return await leave_comment(gh, comment_url, comment, token['token'])
 
 
@@ -67,4 +67,3 @@ async def issue_task_update(event, gh, *args, **kwargs):
         comment_url = event.data['issue']['comments_url']
         comment = 'Nice, one of tasks is done'
         return await leave_comment(gh, comment_url, comment, token['token'])
-

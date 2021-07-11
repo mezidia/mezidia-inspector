@@ -134,4 +134,3 @@ async def send_message_telegram(message: str) -> None:
     resp = requests.get(f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage?chat_id=353057906'
                         f'&text={message}&parse_mode=Markdown')
     print(resp.status_code)
-
