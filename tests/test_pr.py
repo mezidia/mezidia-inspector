@@ -18,17 +18,17 @@ async def test_pr_opened():
         'pull_request': {
             'number': test_number,
             'author_association': 'owner',
-            'issue_url': issue_url,
+            'comments_url': issue_url,
             'state': 'closed',
-            'labels': 'labels'
         },
-        'sender': {'login': admin_nickname}
+        'sender': {'login': admin_nickname},
+        'repository': {'html_url': 'https://'}
     }
     event = sansio.Event(data, event='pull_request', delivery_id='1')
 
     gh = FakeGH()
     await prs.router.dispatch(event, gh)
-    assert gh.post_url == f'{issue_url}/comments'
+    assert gh.post_url == f'{issue_url}'
 
 
 async def test_branch_deleted_when_pr_merged():
@@ -44,35 +44,7 @@ async def test_branch_deleted_when_pr_merged():
                 'ref': test_ref, 'user': {'login': admin_nickname},
                 'repo': {'name': test_repo_name}
             },
-            'issue_url': issue_url,
-            'state': 'merged',
-        },
-    }
-    event = sansio.Event(data, event='pull_request', delivery_id='1')
-
-    gh = FakeGH()
-    await prs.router.dispatch(event, gh)
-    assert gh.post_data is None  # does not leave a comment
-    assert (
-            gh.delete_url
-            == f'/repos/{admin_nickname}/{test_repo_name}/git/refs/heads/{test_ref}'
-    )
-
-
-async def test_branch_deleted_when_pr_closed():
-    """Test closed pull request"""
-    data = {
-        'action': 'closed',
-        'pull_request': {
-            'number': test_number,
-            'user': {'login': bot_name},
-            'merged': False,
-            'merged_by': {'login': None},
-            'head': {
-                'ref': test_ref, 'user': {'login': admin_nickname},
-                'repo': {'name': test_repo_name}
-            },
-            'issue_url': issue_url,
+            'comments_url': issue_url,
             'state': 'closed',
         },
     }
@@ -80,7 +52,7 @@ async def test_branch_deleted_when_pr_closed():
 
     gh = FakeGH()
     await prs.router.dispatch(event, gh)
-    assert gh.post_data is None  # does not leave a comment
+    assert gh.post_data is None
     assert (
             gh.delete_url
             == f'/repos/{admin_nickname}/{test_repo_name}/git/refs/heads/{test_ref}'

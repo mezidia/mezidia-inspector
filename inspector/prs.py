@@ -17,12 +17,13 @@ async def pr_opened(event, gh, *args, **kwargs):
     if author_association == 'NONE':
         comment += f"It's your first contribution, so read [CONTRIBUTING.md]({file_url}), if you didn't do this.\n"
     comment += 'There are some tasks for you:\n'
-    for field in fields:
-        comment += f"- {'[x]' if event.data['pull_request'][field['field_name']] else '[ ]'} {field['field_text']}\n"
-    comment += f"- {'[x]' if event.data['pull_request']['draft'] == 'true' else '[ ]'} " \
-               f"{'Make a pull request draft at first'}\n"
-    comment += '\nTo close issue send comment "close", to reopen - "reopen", to merge - "merge"'
     if token is not None:
+        for field in fields:
+            comment += f"- {'[x]' if event.data['pull_request'][field['field_name']] else '[ ]'} {field['field_text']}\n"
+        comment += f"- {'[x]' if event.data['pull_request']['draft'] == 'true' else '[ ]'} " \
+                f"{'Make a pull request draft at first'}\n"
+        comment += '\nTo close issue send comment "close", to reopen - "reopen", to merge - "merge"'
+        
         return await leave_comment(gh, comment_url, comment, token['token'])
     else:
         return await gh.post(comment_url)
@@ -47,7 +48,7 @@ async def pr_closed_merged(event, gh, *args, **kwargs):
         if token is not None:
             await gh.delete(branch_url, oauth_token=token['token'],)
         else:  # For tests
-            await gh.delete(branch_url)
+            return await gh.delete(branch_url)
     else:
         comment = f'Okay, @{created_by}, see you next time\n'
         comment += '> To reopen pull request type the comment "reopen"'
