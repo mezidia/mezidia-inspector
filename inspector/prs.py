@@ -21,7 +21,7 @@ async def pr_opened(event, gh, *args, **kwargs):
         for field in fields:
             comment += f"- {'[x]' if event.data['pull_request'][field['field_name']] else '[ ]'} {field['field_text']}\n"
         comment += f"- {'[x]' if event.data['pull_request']['draft'] == 'true' else '[ ]'} " \
-                    f"{'Make a pull request draft at first'}\n"
+                   f"{'Make a pull request draft at first'}\n"
         comment += '\nTo close issue send comment "close", to reopen - "reopen", to merge - "merge"'
         return await leave_comment(gh, comment_url, comment, token['token'])
     else:
