@@ -10,15 +10,12 @@ async def test_issue_opened():
     admin_nickname = 'mezgoodle'
     data = {
         'action': 'created',
-        'comment': {
-            'url': issue_url,
-        },
-        'sender': {'login': admin_nickname}
+        'issue': {'comments_url': issue_url},
+        'sender': {'login': admin_nickname},
+        'comment': {'body': 'closE '}
     }
     event = sansio.Event(data, event='issue_comment', delivery_id='1')
 
     gh = FakeGH()
     await issues.router.dispatch(event, gh)
-    assert (
-            gh.post_url == f'{issue_url}/comments'
-    )
+    assert gh.post_url == issue_url
