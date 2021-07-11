@@ -3,7 +3,7 @@ async-timeout==3.0.1
 attrs==21.2.0
 cachetools==4.2.2
 certifi==2021.5.30
-cffi==1.14.5
+cffi==1.14.6
 chardet==4.0.0
 cryptography==3.4.7
 gidgethub==5.0.1
