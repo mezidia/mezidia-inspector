@@ -3,7 +3,7 @@
 </h1>
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
-## How to contribute to `project-name`
+## How to contribute to `mezidia-inspector`
 
 ### **Did you find a bug?**
 
