@@ -41,8 +41,8 @@ async def repo_installation_added(event, gh, *args, **kwargs):
 async def repo_installation_deleted(event, gh, *args, **kwargs):
     """Deleted bot from repositories"""
     sender_name = event.data['sender']['login']
-    html_link = event.data['sender']['html_url']
+    html_url = event.data['sender']['html_url']
     for repo in event.data['repositories']:
         repo_name = repo['name']
-        await send_message_telegram(f'User [{sender_name}]({html_link}) deleted app'
-                                    f' in [{repo_name}]({html_link}/{repo_name}) repository.')
+        await send_message_telegram(f'User [{sender_name}]({html_url}) deleted app'
+                                    f' in [{repo_name}]({html_url}/{repo_name}) repository.')

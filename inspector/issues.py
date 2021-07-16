@@ -1,5 +1,3 @@
-"""Issues trigger"""
-
 import gidgethub.routing
 
 from .utils import get_token, leave_comment, update_issue, states, fields, help_issue_update

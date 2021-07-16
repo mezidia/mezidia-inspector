@@ -1,5 +1,5 @@
 class FakeGH:
-    """Create fake GitHub object"""
+    """Fake GitHub class"""
 
     def __init__(self):
         self.post_data = None

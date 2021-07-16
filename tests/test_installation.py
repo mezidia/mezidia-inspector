@@ -17,6 +17,4 @@ async def test_installation():
 
     gh = FakeGH()
     await installation.router.dispatch(event, gh)
-    assert (
-            gh.post_url == f'/repos/{bot_name}/issues'
-    )
+    assert gh.post_url == f'/repos/{bot_name}/issues'
