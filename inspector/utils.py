@@ -118,7 +118,7 @@ async def help_issue_update(event, object_type: str) -> bool:
         'labeled': 'labels',
         'assigned': 'assignees',
     }
-    if actions[event.data['action']] == 'converted_to_draft' or actions[event.data['action']] == 'milestoned':
+    if event.data['action'] == 'converted_to_draft' or event.data['action'] == 'milestoned':
         return True
     if len(event.data[object_type][actions[event.data['action']]]) > 1:
         return False
