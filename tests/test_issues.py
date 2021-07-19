@@ -10,7 +10,7 @@ async def test_issue_opened():
     admin_nickname = 'mezgoodle'
     data = {
         'action': 'created',
-        'issue': {'comments_url': issue_url},
+        'issue': {'comments_url': issue_url, 'user': {'login': admin_nickname}},
         'sender': {'login': admin_nickname},
         'comment': {'body': 'closE '}
     }
