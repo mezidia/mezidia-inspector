@@ -10,22 +10,24 @@ async def issue_comment_created(event, gh, *args, **kwargs):
     """Created issue comment"""
     comment_text = event.data['comment']['body'].lower().strip()
     if comment_text in states:
+        issue_author = event.data['issue']['user']['login']
         username = event.data['sender']['login']
-        token = await get_token(event, gh)
-        issue_comment_url = event.data['issue']['comments_url']
-        comment = f'@{username}, I updated the issue'
-        if token:
-            if comment_text == 'merge':
-                issue_url = event.data['repository']['url']
-                pull_number = event.data['issue']['html_url'].split('/')[-1]
-                issue_url += f'/pulls/{pull_number}/merge'
-                await update_issue(gh, issue_url, comment_text, token['token'])
+        if issue_author == username:
+            token = await get_token(event, gh)
+            issue_comment_url = event.data['issue']['comments_url']
+            comment = f'@{username}, I updated the issue'
+            if token:
+                if comment_text == 'merge':
+                    issue_url = event.data['repository']['url']
+                    pull_number = event.data['issue']['html_url'].split('/')[-1]
+                    issue_url += f'/pulls/{pull_number}/merge'
+                    await update_issue(gh, issue_url, comment_text, token['token'])
+                else:
+                    issue_url = event.data['issue']['url']
+                    await update_issue(gh, issue_url, comment_text, token['token'])
+                return await leave_comment(gh, issue_comment_url, comment, token['token'])
             else:
-                issue_url = event.data['issue']['url']
-                await update_issue(gh, issue_url, comment_text, token['token'])
-            return await leave_comment(gh, issue_comment_url, comment, token['token'])
-        else:
-            await gh.post(issue_comment_url)
+                await gh.post(issue_comment_url)
 
 
 @router.register('issues', action='opened')
