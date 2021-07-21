@@ -121,7 +121,7 @@ if __name__ == "__main__":  # pragma: no cover
 
 ## Installation :computer:
 
-To install this app, click on [link](https://github.com/apps/mezidia-inspector).
+To install this app, click on [link](https://github.com/marketplace/mezidia-inspector).
 
 ## Fast usage :dash:
 
