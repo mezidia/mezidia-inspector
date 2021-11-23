@@ -5,7 +5,7 @@ cachetools==4.2.2
 certifi==2021.5.30
 cffi==1.14.5
 chardet==4.0.0
-cryptography==3.4.7
+cryptography==36.0.0
 gidgethub==5.0.1
 idna==2.10
 multidict==5.1.0
