@@ -13,6 +13,6 @@ pycparser==2.20
 PyJWT==2.3.0
 requests==2.26.0
 typing-extensions==3.10.0.0
-uritemplate==3.0.1
+uritemplate==4.1.1
 urllib3==1.26.6
 yarl==1.6.3
