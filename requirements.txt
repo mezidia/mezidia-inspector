@@ -7,7 +7,7 @@ cffi==1.14.5
 chardet==4.0.0
 cryptography==3.4.7
 gidgethub==5.0.1
-idna==2.10
+idna==3.3
 multidict==5.1.0
 pycparser==2.20
 PyJWT==2.3.0
