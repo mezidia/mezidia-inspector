@@ -2,14 +2,14 @@ aiohttp==3.7.4.post0
 async-timeout==3.0.1
 attrs==21.2.0
 cachetools==4.2.2
-certifi==2021.5.30
+certifi==2021.10.8
 cffi==1.14.5
 chardet==4.0.0
 cryptography==3.4.7
 gidgethub==5.0.1
 idna==2.10
 multidict==5.2.0
-pycparser==2.20
+pycparser==2.21
 PyJWT==2.3.0
 requests==2.26.0
 typing-extensions==3.10.0.0
