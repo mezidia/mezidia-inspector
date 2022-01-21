@@ -189,6 +189,10 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 - [GitHub bots tutorial](https://github-app-tutorial.readthedocs.io/en/latest/)
 - [miss-islington](https://github.com/python/miss-islington)
 
+## Issues
+
+Maybe some features will not work in organization repositories, but not so much.
+
 ## License :bookmark:
 
 MIT © [mezidia](https://github.com/mezidia)
