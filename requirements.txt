@@ -8,7 +8,7 @@ chardet==4.0.0
 cryptography==36.0.1
 gidgethub==5.0.1
 idna==2.10
-multidict==5.2.0
+multidict==6.0.2
 pycparser==2.20
 PyJWT==2.3.0
 requests==2.26.0
