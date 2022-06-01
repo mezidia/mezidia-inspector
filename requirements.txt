@@ -6,7 +6,7 @@ certifi==2021.10.8
 cffi==1.14.5
 chardet==4.0.0
 cryptography==37.0.1
-gidgethub==5.1.0
+gidgethub==5.2.0
 idna==2.10
 multidict==6.0.2
 pycparser==2.20
