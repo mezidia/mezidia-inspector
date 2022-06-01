@@ -10,7 +10,7 @@ gidgethub==5.1.0
 idna==2.10
 multidict==6.0.2
 pycparser==2.20
-PyJWT==2.3.0
+PyJWT==2.4.0
 requests==2.27.1
 typing-extensions==4.2.0
 uritemplate==4.1.1
