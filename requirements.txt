@@ -11,7 +11,7 @@ idna==2.10
 multidict==6.0.2
 pycparser==2.20
 PyJWT==2.3.0
-requests==2.27.1
+requests==2.28.1
 typing-extensions==4.2.0
 uritemplate==4.1.1
 urllib3==1.26.9
